@@ -1,0 +1,240 @@
+@font-face {
+    font-family: sfpro;
+    src: url(../fonts/sfpro.otf);
+}
+
+body {
+    padding: 10px;
+}
+
+.choreo-holder {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.choreo-item {
+    width: 170px;
+    height: 170px;
+    margin-left: 10px !important;
+    cursor: pointer;
+}
+
+.choreo-item-bot {
+    width: 170px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.75);
+    margin-top: -50px;
+    z-index: 2;
+    position: relative;
+}
+
+.choreo-item-text {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.6em;
+    margin-left: 5px;
+    height: 26px;
+    line-height: 28px;
+}
+
+.choreo-item-duration {
+    margin-left: 5px;
+    color: rgba(255,255,255,0.55);
+}
+
+.choreo-item-btn {
+    position: relative;
+    top: -40px;
+    left: 130px;
+}
+
+.main-container {
+    width: 100%;
+    margin: auto;
+    max-width: 1000px;
+    /*   background-color: red; */
+}
+
+.holder-title {
+    padding-left: 10px;
+    font-size: 2em;
+}
+
+#login-card, #register-card {
+    display: flex;
+    justify-content: center;
+    color: #848484;
+}
+
+#create-btn {
+    width: 170px;
+    height: 170px;
+    margin-left: 10px;
+    text-align: center;
+    background-color: rgba(0,0,0,.75);
+    cursor: pointer;
+}
+
+.holder-title {
+    font-family: sfpro;
+}
+
+.new-clip-btn {
+    position: unset !important;
+    bottom: unset !important;
+    margin: 20px auto auto;
+}
+
+.create-container {
+    height: 600px;
+    background-color: #404040;
+}
+
+.cue-container {
+    /*background-color: red;*/
+    width: calc(100% - 84px);
+    height: 100%;
+}
+
+.divid {
+    height: 95%;
+    margin-top: 2%;
+    width: 3px;
+    padding: 0 !important;
+    background-color: white;
+}
+
+#back-btn {
+    margin-bottom: -55px;
+}
+
+#create-btn {
+    min-width: 170px;
+}
+
+.dance_name {
+    font-size: 3em;
+    width: 300px;
+    margin-left: auto;
+    text-align: center;
+    background-color: rgba(0,0,0,0.65);
+    border-radius: 5px;
+    color: white;
+    margin-bottom: 5px;
+    margin-right: auto;
+}
+
+.editing-cue {
+    margin: 5px;
+    padding: 7px;
+    background-color: #00000082;
+    border-radius: 3px;
+    height: 70px;
+}
+
+body {
+/*  font-family: Arial, sans-serif;
+  background: url(http://www.shukatsu-note.com/wp-content/uploads/2014/12/computer-564136_1280.jpg) no-repeat;*/
+  background-size: cover;
+  height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #06D85F;
+  margin: 80px 0;
+}
+
+/*.box {
+  width: 40%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+  border-radius: 20px/50px;
+  background-clip: padding-box;
+  text-align: center;
+}*/
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  align-items: center;
+  position:absolute; 
+  display: inline-block; 
+  left:50%; 
+  border: 5px solid #fcfcfc; 
+  line-height: 40px; 
+  margin-top:30px; 
+  margin-left:-75px; 
+}
+
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1000000;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 70%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}

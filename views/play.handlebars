@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
+
+    <!-- Backbutton  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
+    <script src="../../js/dcount.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link href="../../css/dcount.css" rel="stylesheet">
+
+    <style>
+        .container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            border-radius: 5px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+    </style>
+
+    <title>dancecount</title>
+
+</head>
+
+<body class="pink darken-3">
+<!--<a id="back-btn" class="btn-floating btn-large waves-effect waves-light red" style="border-radius: 50%;"><i-->
+        <!--class="material-icons">arrow_back</i></a>-->
+<button id="back-btn" class="btn-floating red btn-large"
+        style="left: 10px; top: 10px; position: fixed;">
+    <i class="material-icons" style="font-size: 2em;">arrow_back</i>
+</button>
+
+<div id="body" align="center">
+    <h2 align="center" style="display: inline-block; margin: 10px">{{name}}</h2>
+    <!--<a id ="edit-btn" class="btn-floating btn-small waves-effect waves-light teal choreo-item-btn"-->
+                       <!--onclick="event.stopPropagation();editDance('{{author}}', '{{name}}');"><i-->
+                            <!--class="material-icons">edit</i></a>-->
+    <form id="edit-btn" method="get" action="/create/{{author}}/{{name}}" style="display: none">
+    </form>
+    <button style="right: 10px; top: 10px; position: fixed;"
+            class="black btn-floating waves-effect waves-light btn btn-large" type="submit"
+            form="edit-btn">
+        <i class="material-icons">edit</i>
+    </button>
+
+
+    <div id="screen" class="container" style="width:100%; height:270px; max-width: 500px; max-height: 270px;"> <!-- THE IMAGE GALLERY -->
+        <img src="../../black.jpg" width="100%" height="100%"/>
+    </div>
+
+
+    <p></p>
+    <!-- PUT THE AUDIO HERE -->
+    <script type="text/javascript">
+        //console.log("{{song}}")
+    </script>
+    <audio id="sample" src="{{song}}" controls style="width: 100%; max-height:400px; max-width: 500px" preload="auto" ontimeupdate="audio()">
+        <p>Your browser does not support the audio element</p>
+    </audio>
+
+
+    <!-- LOOP TOGGLE HTML -->
+    <p>
+    <div>Loop Toggle</div>
+    <div class="switch">
+        <label style="color: black !important;">
+            Off
+            <input type="checkbox" id="check">
+            <span class="lever"></span>
+            On
+        </label>
+    </div>
+    </p>
+
+    <!-- LOOP TOGGLE JAVASCRIPT? -->
+
+    <script>
+        myaudio = document.getElementById("sample");
+        var slider = document.getElementById("check");
+        slider.oninput = function () {
+            let my_range = $(".js-range-slider").data("ionRangeSlider");
+
+            if (myaudio.loop === false) {
+                // let my_range = $(".js-range-slider").data("ionRangeSlider");
+                my_range.update({
+                    disable: false
+                });
+
+                myaudio.loop = true;
+            }
+            else {
+                my_range.update({
+                    disable: true
+                });
+                myaudio.loop = false;
+            }
+        };
+    </script>
+
+
+    <p></p>
+    <!-- LOOP 2 HANDLE SLIDER RANGE -->
+    <div style="width: 450px; max-width: 100%;">
+        <input type="text" class="js-range-slider" name="my_range" value=""/>
+    </div>
+
+    <script>
+        function pad(n, width, z) {
+            z = z || '0';
+            n = n + '';
+            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+        }
+
+        function toMin(num) {
+            var n = num;
+            var minutes = Math.floor(n / 60);
+            var seconds = (n - minutes * 60);
+            return (minutes.toString() + ':' + pad(seconds.toString(), 2));
+        }
+  
+        $(".js-range-slider").ionRangeSlider({
+            skin: "round",
+            type: "double",
+            min: 0,
+            max: 210,
+            from: 0,
+            disable: true,
+            prettify: toMin
+        });
+
+        let my_range = $(".js-range-slider").data("ionRangeSlider");
+        //  Update range slider content (this will change handles positions)
+        myaudio = document.getElementById("sample");
+        myaudio.addEventListener('loadedmetadata', function () {
+            my_range.update({
+            max: Math.floor(myaudio.duration),
+            from: 0,
+            to: Math.floor(myaudio.duration)
+        });
+        });
+    </script>
+
+
+           <!-- SPEED OF AUDIO SLIDER -->
+           <p></p>
+    <div style="width: 450px; max-width: 90%;">
+        Playback Speed
+        <input type="text" class="js-range-slider" id="speedrange"name="speedrange" value=""/>
+        <p></p>
+   </div>
+
+    <script>
+        function decimal(num) {
+            var n = num;
+            return (n / 100).toString() + 'x';
+        }
+  
+        $("#speedrange").ionRangeSlider({
+            skin: "round",
+            type: "single",
+            min: 0,
+            from_min: 25,
+            max: 200,
+            from: 100,
+            step: 5,
+
+            prettify: decimal
+        });
+    </script>
+
+    <script>
+        var slider = document.getElementById("speedrange");
+        //var output = document.getElementById("output");
+        //output.innerHTML = slider.value;
+        slider.oninput = function () {
+            //output.innerHTML = this.value / 100;
+            myaudio.playbackRate = this.value / 100;
+        }
+    </script>    
+
+    <!-- hidden audio cues -->
+    <div id="hidden audio cues">
+
+        {{#each cues}}
+            {{#if audio}} 
+
+                <audio id = "audio{{start}}" src="{{file}}" type="mp3" controls preload="auto" hidden="hidden"ontimeupdate="
+                //console.log(this.currentTime >= (parseInt({{end}}, 10) - parseInt({{start}}, 10)));
+                            if (this.currentTime >= (parseInt({{end}}, 10) - parseInt({{start}}, 10))) {
+                                this.pause();
+                                this.currentTime = 0;
+                            }">
+                            <div id="startTime">{{start}}</div>
+                            <div id="endTime">{{end}}</div>
+                </audio>
+
+            {{/if}}
+        {{/each}}
+        
+    </div>
+
+    <!-- CUES AND AUDIO LISTENER FUNCTION (LOOP BETWEEN SPECIFIC TIME & DISPLAYS IMAGE) -->
+    <script>
+        var myaudio = document.getElementById("sample");
+        var cuesArray = new Array(400).fill(("<img id='screen' src='../../black.jpg' width='100%' height='100%'/>"));
+        var audioCueArray = new Array(400);
+        var audiocues = document.getElementsByTagName("audio");
+        audiocues = Array.prototype.slice.call(audiocues,1);
+
+        myaudio.addEventListener('loadedmetadata', function () {
+
+            {{#each cues}}
+                for (let i = {{start}}; i <={{end}}; i++) {
+                    if ("{{type}}" == "text") {
+                        cuesArray[i] = ("<h2><strong>{{file}}</strong></h2>");
+                    }
+                    else if ("{{type}}" == "image") {
+                        cuesArray[i] = ("<img src='{{file}}' width='302' height='202'/>");
+                    }
+                }
+            {{/each}}
+        });
+        myaudio.onpause = function() {
+            for (var i = 0; i < audiocues.length; i++) {
+                audiocues[i].pause();
+            }
+        };
+
+        myaudio.onplay = function() {
+            for (var i = 0; i < audiocues.length; i++) {
+                var cue = audiocues[i];
+                var startT = parseInt(cue.children[0].textContent, 10);
+                var endT = parseInt(cue.children[1].textContent, 10);
+                if ((myaudio.currentTime > startT) && (myaudio.currentTime < endT)) {
+                    cue.currentTime = myaudio.currentTime - startT;
+                    cue.play();
+                }
+            }
+        };
+
+
+        function audio() {
+
+            // for (let i = 0; i < cuesArray.length; i++) {
+            //     console.log(cuesArray[i])
+            // }
+            var myaudio = document.getElementById("sample");
+            //play audiocue at its set time
+            var audiocue = document.getElementById("audio"+Math.floor(myaudio.currentTime).toString());
+            
+            //console.log("audio"+Math.floor(myaudio.currentTime).toString());
+            if (audiocue != null) {
+                audiocue.play();
+                audiocue.volume = myaudio.volume;
+            }
+
+            if (document.getElementById("sample").currentTime < cuesArray.length) {
+                if (cuesArray[Math.floor(document.getElementById("sample").currentTime)] !== $("#screen").html()) {
+                    $("#screen").html(cuesArray[Math.floor(document.getElementById("sample").currentTime)]);
+                }
+                //console.log(Math.floor(document.getElementById("sample").currentTime));
+
+                //document.getElementById('imageDiv').appendChild(img);
+            }
+            if (myaudio.loop == true) {
+                if (document.getElementById("sample").currentTime >= $('.js-range-slider').data("to")) {
+                    document.getElementById("sample").currentTime = $('.js-range-slider').data("from")
+                }
+
+                if (document.getElementById("sample").currentTime <= $('.js-range-slider').data("from")) {
+                    document.getElementById("sample").currentTime = $('.js-range-slider').data("from")
+                }
+            }
+        }
+    </script>
+
+
+    <!--
+    Click to select section to loop: <input onclick="this.value=Math.floor(myaudio.currentTime)" type="button" value=0 id="myButton1"></input> -
+    <input onclick="this.value=Math.floor(myaudio.currentTime)" type="button" value=0 id="myButton2"></input> (seconds)
+  -->
+
+ 
+</div>
+
+<button data-target="faq-modal" class="btn-floating modal-trigger red btn-large"
+        style="right: 10px; bottom: 10px; position: fixed;">
+    <i class="material-icons" style="font-size: 2em;">help_outline</i>
+</button>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<div id="faq-modal" class="modal">
+    <div class="modal-content">
+        <h4 style="text-align: center;">FAQ</h4>
+        <a> <b> How can I add my picture, text, or audio cues?</b> </a>
+        <p style="color:gray"> From <b style="color:black"> Home</b>, click the <b style="color:black"> Create </b>
+            button then add the cues of your choice. </p>
+
+        <a> <b> How can I loop the music?</b> </a>
+        <p style="color:gray"> When you click the <b style="color:black"> Edit </b> button on the particular dance you
+            want to edit, slide to the minutes of the music you want to loop, then toggle the <b style="color:black">
+                Loop </b> button. </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+</div>
+</body>
+</html>

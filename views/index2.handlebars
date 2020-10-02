@@ -1,0 +1,214 @@
+<html>
+<head>
+<!-- Google Analytics Content Experiment code -->
+<script>function utmx_section(){}function utmx(){}(function(){var
+k='190879672-5',d=document,l=d.location,c=d.cookie;
+if(l.search.indexOf('utm_expid='+k)>0)return;
+function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
+indexOf(';',i);return escape(c.substring(i+n.length+1,j<0?c.
+length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;d.write(
+'<sc'+'ript src="'+'http'+(l.protocol=='https:'?'s://ssl':
+'://www')+'.google-analytics.com/ga_exp.js?'+'utmxkey='+k+
+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
+valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+'" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
+</script><script>utmx('url','A/B');</script>
+<!-- End of Google Analytics Content Experiment code -->
+
+
+
+    <title>Dance Notes</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    <link href="css/styles2.css" rel="stylesheet">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+
+    <!-- Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-135507455-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+
+</head>
+<link rel="shortcut icon" href="/myfavicon.ico" type="image/x-icon"/>
+<link rel="icon" href="/myfavicon.ico" type="image/x-icon"/>
+<body class="pink darken-3">
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4 style="text-align: center;">New Dance Note</h4>
+        <script>
+            function checkForm(form) {
+                if (form.dn_name.value === "") {
+                    M.toast({html: 'Add a name to your note!'});
+                    form.dn_name.focus();
+                    return false;
+                }
+
+                var filename = form.file.value;
+
+                if (filename === "") {
+                    M.toast({html: 'Choose a base song!'});
+                    form.file.focus();
+                    return false;
+                }
+
+                var ext = filename.split('.').pop();
+
+                if (ext !== 'mp3' && ext !== 'ogg') {
+                    M.toast({html: 'Unsupported audio type!'});
+                    M.toast({html: 'Please use mp3 or ogg'});
+                    form.file.focus();
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+        <form id="dn-form" method="post" enctype="multipart/form-data"
+              action="/create_new/{{name}}"
+              onsubmit="return checkForm(this)">
+            <div class="input-field col s6">
+                <input id="dn-name" type="text" name="dn_name">
+                <label for="dn-name">Note Name</label>
+            </div>
+            <div class="row">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Upload</span>
+                        <input type="file" name="file"/>
+                    </div>
+
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text"
+                               placeholder="Upload song"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="waves-effect waves-light btn" type="submit" form="dn-form" value="Submit">
+            Submit
+        </button>
+    </div>
+</div>
+
+<div class='main-container'>
+    <div class='holder-title' style="font-size: 45px">
+        My Dances
+    </div>
+    <div>
+
+    <div class='choreo-holder'>
+        <div id="create-btn" class="card valign-wrapper">
+            <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#modal1"
+               style="margin: auto;"><i
+                    class="material-icons">add</i></a>
+        </div>
+        {{#each dances}}
+            <div class="row" style="align-items: center;">
+                <div class="column" , choreo-item card
+                ' onclick="event.stopPropagation();openDance('{{author}}', '{{name}}');">
+                <img src="image3.png" alt="Smiley face" width="400">
+                <div class='choreo-item-bot'>
+                    <div class='choreo-item-text'>
+                        {{name}}
+                    </div>
+                    <div class='choreo-item-duration'>
+                        {{duration}}
+                    </div>
+                    <div>
+                        <a class="btn-floating btn-small waves-effect waves-light teal choreo-item-btn"
+                           onclick="event.stopPropagation();editDance('{{author}}', '{{name}}');"><i
+                                class="material-icons">edit</i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+</div>
+<!--<div class="box">-->
+<!--<a class="button" href="#popup1"> Help & Documentation </a>-->
+<!--</div>-->
+
+<!--<div id="popup1" class="overlay">-->
+
+<!--<div class="popup">-->
+<!--<h2>FAQ</h2>-->
+<!--<a class="close" href="#">&times;</a>-->
+<!--<div class="content">-->
+<!--<a> <b> How can I add my picture, text, or audio cues? </a> </b>-->
+<!--<p style= "color:gray"> From <b style="color:black"> Home</b>, click the <b style="color:black"> Create </b> button then add the cues of your choice. </p>-->
+
+<!--<a> <b> How can I loop the music? </a> </b>-->
+<!--<p style= "color:gray"> When you click the <b style="color:black"> Edit </b> button on the particular dance you want to edit, slide to the minutes of the music you want to loop, then toggle the <b style="color:black"> Loop </b> button. </p>-->
+
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<button data-target="faq-modal" class="btn-floating modal-trigger red btn-large"
+        style="right: 10px; bottom: 10px; position: fixed; z-index: 3">
+    <i class="material-icons" style="font-size: 2em;">help_outline</i>
+</button>
+
+
+<div id="faq-modal" class="modal">
+    <div class="modal-content">
+        <h4 style="text-align: center;">FAQ</h4>
+        <a> <b> How can I create my own dance? </b> </a>
+        <p style="color:gray"> From <b style="color:black"> Home,</b> click the <b style="color:black"> Plus </b>
+            button, then enter the name of your dance and choose the song you want to upload. </p>
+
+
+        <a> <b> How can I add & delete my picture, text, or audio cues?</b> </a>
+        <p style="color:gray"> To add your own cues, click the <b style="color:black"> Edit </b> button on the dance of
+            your choice, then add your own picture, text, or audio cues. To delete a particular cue, click the <b
+                    style="color:black"> Trash </b> button beside the cue you want to remove </p>
+
+        <a> <b> How can I go to my dance after adding the cues? </b> </a>
+        <p style="color:gray"> After adding all the cues you want, click the <b style="color:black"> Play </b> button
+            located at the top-right corner of the page. This will automacally lead you to your dance. </p>
+
+
+        <a> <b> How can I loop the song?</b> </a>
+        <p style="color:gray"> Under the <b style="color:black"> Play page, </b> you will be able to loopthe music by
+            moving the two endpoints of the range slider into a particular song you want to loop. Then, toggle the <b
+                    style="color:black"> Loop </b> button and your songshould be automatically playing in a loop. </p>
+
+        <!-- <a> <b> How can I control the speed of  the song?</b> </a>
+        <p style="color:gray"> Under the <b style="color:black"> Play page, </b> you will be able to control the speed of the song by moving the point on the slider to the speed you desire. The song should automatically play in that particular speed. </p> -->
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<html>
+<head>
+    <title>Create</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Favicon for tabs -->
+    <link rel="shortcut icon" href="/myfavicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="/myfavicon.ico" type="image/x-icon"/>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
+
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
+
+
+    <script src="../../js/create.js"></script>
+    <link href="../../css/styles.css" rel="stylesheet">
+    <link href="../../css/create.css" rel="stylesheet">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+
+
+</head>
+<body class="pink darken-3">
+<button id="back-btn" class="btn-floating red btn-large"
+        style="left: 10px; top: 10px; position: fixed;">
+    <i class="material-icons" style="font-size: 2em;">arrow_back</i>
+</button>
+<div style="display: flex; width: 350px; margin: auto">
+    <div style="display: flex">
+        <div class="dance_name truncate"
+             style="text-align: center; padding-left: 5px; padding-right: 5px;">{{name}}</div>
+        <button style="right: 10px; top: 10px; position: fixed;"
+                class="black btn-floating waves-effect waves-light btn btn-large" type="submit"
+                form="play-btn">
+            <i class="material-icons">play_arrow</i>
+        </button>
+    </div>
+    <form id="play-btn" method="get" action="/dance/{{author}}/{{name}}">
+    </form>
+</div>
+
+<div class='main-container create-container card'>
+
+    <div class="row">
+        <div class="col cue-container" style="overflow: auto;">
+            {{#each cues}}
+
+                <!--<a href="#modal-{{cue_name}}" class="modal-trigger">-->
+                <div class="editing-cue {{type}}-cue" style="padding-right: 70px">
+                    <!--<div style="color: white; font-size: 1.2em;">{{name}}</div>-->
+                    <input id="{{~{cue_name}~}}-cue-range" type="text" class="js-range-slider" name="my_range" value=""
+                           data-type="double"
+                           data-min="0"
+                           data-max="{{../duration-s}}"
+                           data-from="{{start}}"
+                           data-to="{{end}}" onclick="event.stopPropagation()"/>
+
+                    <script>
+                        function deleteCue() {
+                            var url = "delete_cue/" + '{{../author}}' + "/" + '{{../name}}' + "/" + '{{cue_name}}';
+
+                            $.ajax({
+                                method: "POST",
+                                url: url
+                            }).done(function (msg) {
+                                // alert("Cue deleted:  " + msg);
+
+                                location.reload(true);
+                            });
+                        }
+                    </script>
+
+                    <!--<button data-target="modal-{{cue_name}}" class="btn modal-trigger">Modal</button>-->
+
+                    <a style="position: relative; left: calc(100% + 5px); top: -60px;"
+                       class="btn-floating btn-large waves-effect waves-light red modal-trigger"
+                       href="#modal-{{cue_name}}"><i
+                            class="material-icons">delete</i></a>
+                </div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        function pad(n, width, z) {
+                            z = z || '0';
+                            n = n + '';
+                            return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                        }
+
+                        function toMin(num) {
+                            var n = num;
+                            var minutes = Math.floor(n / 60);
+                            var seconds = (n - minutes * 60);
+                            return (minutes.toString() + ':' + pad(seconds.toString(), 2));
+                        }
+
+                        var el = $("#{{~{cue_name}~}}-cue-range");
+                        el.ionRangeSlider({
+                            onFinish: function (data) {
+                                // Called then action is done and mouse is released
+
+                                var from = data.from;
+                                var to = data.to;
+
+                                var url = "update_cue/" + '{{../author}}' + "/" + '{{../name}}' + "/" + '{{cue_name}}' + "/" + from + "/" + to;
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: url
+                                }).done(function (msg) {
+                                    alert("Data Saved:  " + msg);
+                                });
+                            },
+                            prettify: toMin
+                        });
+
+                        $("#{{cue_name}}-cue-range").parent().find(".irs-bar").text('{{cue_name}}')
+                    });
+                </script>
+                <!--</a>-->
+
+                <div id="modal-{{cue_name}}" class="modal" style="height: 170px; overflow: hidden">
+                    <div class="modal-content">
+                        <h4 style="text-align: center;">Delete Cue?</h4>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;">
+                        <a href="#!" style="color: white"
+                           class="modal-close waves-effect waves-green btn-flat red z-depth-1">No</a>
+                        <a href="#!" style="color: white"
+                           class="modal-close waves-effect waves-green btn-flat green z-depth-1" onclick="deleteCue()">Yes</a>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+        <div class="col divid"></div>
+        <div class="col">
+
+            <ul style="position: unset !important;">
+                <li style="margin-bottom: 18px"><a class="btn-floating btn-large blue waves-effect modal-trigger"
+                                                   href="#modal1"><i
+                        class="material-icons">text_fields</i></a></li>
+                <li style="margin-bottom: 18px"><a class="btn-floating btn-large green waves-effect modal-trigger"
+                                                   href="#modal2"><i
+                        class="material-icons">audiotrack</i></a></li>
+                <li style="margin-bottom: 18px"><a class="btn-floating btn-large purple waves-effect modal-trigger"
+                                                   href="#modal3"><i class="material-icons">image</i></a>
+                </li>
+            </ul>
+
+            <a style="margin-bottom: 18px" class="btn-floating btn-large red waves-effect modal-trigger"
+               href="#modal-delete-note"><i class="material-icons">delete_forever</i></a>
+        </div>
+    </div>
+</div>
+
+<div id="modal1" class="modal" style="height: 390px; max-height: 390px;overflow-y: hidden;">
+    <div class="modal-content">
+        <h4 style="text-align: center;">New Textual Cue</h4>
+        <script>
+            function checkTextForm(form) {
+                if (form.cue_name.value === "") {
+                    M.toast({html: 'Add a name to your note!'});
+                    form.cue_name.focus();
+                    return false;
+                }
+
+                if (form.text_area.value === "") {
+                    M.toast({html: 'Add text to your cue!'});
+                    form.text_area.focus();
+                    return false;
+                }
+
+                $('#create-text-text').css('display', 'none');
+                $('#create-text-loader').css('display', 'inline-block');
+
+                return true;
+            }
+        </script>
+        <form id="text-form" method="post" action="/upload_text/{{author}}/{{name}}"
+              onsubmit="return checkTextForm(this)">
+            <div class="input-field col s12">
+                <input id="text-cue-name" type="text" name="cue_name">
+                <label for="text-cue-name">Cue Name</label>
+            </div>
+
+            <div class="input-field col s12">
+                <textarea id="textarea1" class="materialize-textarea" name="text_area"></textarea>
+                <label for="textarea1">Text</label>
+            </div>
+            <div style="text-align: center; margin: auto; font-size: 1.1em; color: grey;">Choose start and end times for
+                this cue
+            </div>
+            <input type="text" class="js-range-slider rslider-my" name="my_range" value=""
+                   data-type="double"
+                   data-min="0"
+                   data-max="400"
+                   data-from="100"
+                   data-to="200"/>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <div onclick="addStartEndToForm('#text-form', 'upload_text', '{{author}}', '{{name}}')" class="btn">
+            <!--Submit-->
+            <div id="create-text-text">Submit
+            </div>
+
+            <div id="create-text-loader" class="preloader-wrapper small active" style="display: none">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal2" class="modal" style="height: 410px; max-height: 410px;overflow-y: hidden;">
+    <div class="modal-content">
+        <h4 style="text-align: center;">New Audio Cue</h4>
+        <script>
+            function checkAudioForm(form) {
+                if (form.cue_name.value === "") {
+                    M.toast({html: 'Add a name to your note!'});
+                    form.cue_name.focus();
+                    return false;
+                }
+
+                var filename = form.file.value;
+
+                if (filename === "") {
+                    M.toast({html: 'Choose a song!'});
+                    form.file.focus();
+                    return false;
+                }
+
+                var ext = filename.split('.').pop().toLowerCase();
+
+                if (ext !== 'mp3' && ext !== 'ogg') {
+                    M.toast({html: 'Unsupported audio type!'});
+                    M.toast({html: 'Please use mp3 or ogg'});
+                    form.file.focus();
+                    return false;
+                }
+
+                $('#create-audio-text').css('display', 'none');
+                $('#create-audio-loader').css('display', 'inline-block');
+
+                return true;
+            }
+        </script>
+        <form id="audio-form" method="post" enctype="multipart/form-data" action="/upload_audio/{{author}}/{{name}}"
+              onsubmit="return checkAudioForm(this)">
+            <div class="input-field col s12">
+                <input id="audio-cue-name" type="text" name="cue_name">
+                <label for="audio-cue-name">Cue Name</label>
+            </div>
+            <div class="row">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Upload</span>
+                        <input type="file" name="file"/>
+                    </div>
+
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text"
+                               placeholder="Upload file"/>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: auto; font-size: 1.1em; color: grey;">Choose start and end times for
+                this cue
+            </div>
+            <input type="text" class="js-range-slider rslider-my" name="my_range" value=""
+                   data-type="double"
+                   data-min="0"
+                   data-max="400"
+                   data-from="100"
+                   data-to="200"/>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div onclick="addStartEndToForm('#audio-form', 'upload_audio', '{{author}}', '{{name}}')" class="btn">
+            <div id="create-audio-text">Submit
+            </div>
+            <div id="create-audio-loader" class="preloader-wrapper small active" style="display: none">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal3" class="modal" style="height: 410px; max-height: 410px;overflow-y: hidden;">
+    <div class="modal-content">
+        <h4 style="text-align: center;">New Picture Cue</h4>
+        <script>
+            function checkPicForm(form) {
+                if (form.cue_name.value === "") {
+                    M.toast({html: 'Add a name to your cue!'});
+                    form.cue_name.focus();
+                    return false;
+                }
+
+                var filename = form.file.value;
+
+                if (filename === "") {
+                    M.toast({html: 'Choose an image!'});
+                    form.file.focus();
+                    return false;
+                }
+
+                var ext = filename.split('.').pop().toLowerCase();
+
+                if (ext !== 'png' && ext !== 'jpg' && ext !== 'jpeg' && ext !== 'gif') {
+                    M.toast({html: 'Unsupported image type!'});
+                    M.toast({html: 'Please use png, jpeg, jpg, or gif'});
+                    form.file.focus();
+                    return false;
+                }
+
+                $('#create-pic-text').css('display', 'none');
+                $('#create-pic-loader').css('display', 'inline-block');
+
+                return true;
+            }
+        </script>
+        <form id="picture-form" method="post" enctype="multipart/form-data"
+              action="/upload_picture/{{author}}/{{name}}"
+              onsubmit="return checkPicForm(this)">
+            <div class="input-field col s6">
+                <input id="pic-cue-name" type="text" name="cue_name">
+                <label for="pic-cue-name">Cue Name</label>
+            </div>
+            <div class="row">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Upload</span>
+                        <input type="file" name="file"/>
+                    </div>
+
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text"
+                               placeholder="Upload file"/>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: auto; font-size: 1.1em; color: grey;">Choose start and end times for
+                this cue
+            </div>
+            <input type="text" class="js-range-slider rslider-my" name="my_range" value=""
+                   data-type="double"
+                   data-min="0"
+                   data-max="400"
+                   data-from="100"
+                   data-to="200"/>
+        </form>
+
+
+    </div>
+    <div class="modal-footer">
+        <div onclick="addStartEndToForm('#picture-form', 'upload_picture', '{{author}}', '{{name}}')" class="btn">
+            <div id="create-pic-text">Submit
+            </div>
+            <div id="create-pic-loader" class="preloader-wrapper small active" style="display: none">
+                <div class="spinner-layer spinner-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-yellow">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+
+                <div class="spinner-layer spinner-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteNote() {
+        var url = "delete_note/" + '{{author}}' + "/" + '{{name}}';
+
+        $.ajax({
+            method: "POST",
+            url: url
+        }).done(function (msg) {
+            // alert("Cue deleted:  " + msg);
+
+            window.location = '/index';
+        });
+    }
+</script>
+
+
+<div id="modal-delete-note" class="modal" style="height: 170px; overflow: hidden">
+    <div class="modal-content">
+        <h4 style="text-align: center;">Delete Note?</h4>
+    </div>
+    <div class="modal-footer" style="text-align: center;">
+        <a href="#!" style="color: white"
+           class="modal-close waves-effect waves-green btn-flat red z-depth-1">No</a>
+        <a href="#!" style="color: white"
+           class="modal-close waves-effect waves-green btn-flat green z-depth-1" onclick="deleteNote()">Yes</a>
+    </div>
+</div>
+
+<button data-target="faq-modal" class="btn-floating modal-trigger red btn-large"
+        style="right: 10px; bottom: 10px; position: fixed;">
+    <i class="material-icons" style="font-size: 2em;">help_outline</i>
+</button>
+
+
+<div id="faq-modal" class="modal">
+    <div class="modal-content">
+        <h4 style="text-align: center;">FAQ</h4>
+        <a> <b> How can I add my picture, text, or audio cues?</b> </a>
+        <p style="color:gray"> From <b style="color:black"> Home</b>, click the <b style="color:black"> Create </b>
+            button then add the cues of your choice. </p>
+
+        <a> <b> How can I loop the music?</b> </a>
+        <p style="color:gray"> When you click the <b style="color:black"> Edit </b> button on the particular dance you
+            want to edit, slide to the minutes of the music you want to loop, then toggle the <b style="color:black">
+                Loop </b> button. </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+</div>
+</body>

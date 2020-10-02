@@ -1,0 +1,52 @@
+.irs--flat .irs-bar {
+    height: 32px;
+    border-radius: 2px;
+    color: white;
+    font-size: 1.7em;
+    padding-left: 7px;
+}
+
+.irs--flat .irs-handle {
+    margin-top: 8px;
+    height: 22px;
+}
+
+.irs--flat .irs-line {
+    display: none;
+}
+
+.irs--flat {
+    height: 60px;
+}
+
+.irs-min, .irs-max {
+    display: none;
+}
+
+.irs--flat .irs-handle>i:first-child {
+    background-color: black;
+}
+
+.from {
+    margin-left: 3px;
+}
+
+.to {
+    margin-left: -3px;
+}
+
+.irs-from, .irs-to, .irs-single {
+    color: black !important;
+}
+
+.text-cue .irs-bar {
+    background-color: #2196F3 !important;
+}
+
+.audio-cue .irs-bar {
+    background-color: #4CAF50 !important;
+}
+
+.image-cue .irs-bar {
+    background-color: #9c27b0 !important;
+}
